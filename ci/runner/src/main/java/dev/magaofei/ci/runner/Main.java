@@ -30,7 +30,7 @@ import java.util.concurrent.*;
  */
 public class Main {
 
-    public static void main(String[] args) throws TimeoutException, ExecutionException, IOException {
+    public static void main(String[] args) throws IOException {
         Executor executor = new DockerExecutor();
         String path = "test/ActionTest.yml";
 //        for (String arg : args) {

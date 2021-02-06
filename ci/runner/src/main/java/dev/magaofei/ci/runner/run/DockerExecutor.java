@@ -81,22 +81,9 @@ public class DockerExecutor implements Executor {
      *
      */
     public void runContainer() throws IOException {
-        String imageId;
-        SampleBuildImageResultCallback sampleBuildImageResultCallback = new SampleBuildImageResultCallback();
+
         Path dockerfilePath = this.initDockerfile();
-        try {
-            imageId = this.dockerClient.buildImageCmd()
-                    .withTags(this.dockerConfig.getTag())
-                    .withPull(true)
-                    .withBaseDirectory(dockerfilePath.getParent().toFile())
-                    .withDockerfile(dockerfilePath.toFile())
-                    .exec(sampleBuildImageResultCallback)
-                    .awaitImageId();
-        } catch (Exception e) {
-            logger.warn("build image error ", e);
-            throw new IllegalArgumentException(e);
-        }
-        this.imageId = imageId;
+        this.buildImage(dockerfilePath);
         CreateContainerResponse containerResponse;
         HostConfig hostConfig = new HostConfig();
         List<Bind> bindList = new ArrayList<>();
@@ -106,7 +93,7 @@ public class DockerExecutor implements Executor {
             bindList.add(new Bind(host, new Volume(containerVolume)));
         }
         hostConfig.withBinds(bindList);
-        try (CreateContainerCmd createContainerCmd = this.dockerClient.createContainerCmd(imageId)) {
+        try (CreateContainerCmd createContainerCmd = this.dockerClient.createContainerCmd(this.imageId)) {
             containerResponse = createContainerCmd
                     .withHostConfig(hostConfig)
                     .withTty(true)
@@ -134,6 +121,22 @@ public class DockerExecutor implements Executor {
             }
         } finally {
             this.stop();
+        }
+    }
+
+    private void buildImage(Path dockerfilePath) {
+        SampleBuildImageResultCallback sampleBuildImageResultCallback = new SampleBuildImageResultCallback();
+        try {
+            this.imageId = this.dockerClient.buildImageCmd()
+                    .withTags(this.dockerConfig.getTag())
+                    .withPull(true)
+                    .withBaseDirectory(dockerfilePath.getParent().toFile())
+                    .withDockerfile(dockerfilePath.toFile())
+                    .exec(sampleBuildImageResultCallback)
+                    .awaitImageId();
+        } catch (Exception e) {
+            logger.warn("build image error ", e);
+            throw new IllegalArgumentException(e);
         }
     }
 
