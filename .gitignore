@@ -2,7 +2,7 @@
 *.class
 
 # Log file
-*.log
+*.dev.magaofei.log
 
 # BlueJ files
 *.ctxt
@@ -25,3 +25,9 @@ hs_err_pid*
 .idea
 
 **/*.iml
+
+build/
+
+**/.DS_Store
+
+**/target/

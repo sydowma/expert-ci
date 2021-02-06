@@ -9,4 +9,4 @@
 
 ## DockerExecutor
 
-负责使用容器的方式去执行，每个 stage 转换为 Dockerfile 里的 stage 
+负责使用容器的方式去执行
