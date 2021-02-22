@@ -17,3 +17,12 @@
 - [ ] multiple stage
 - [ ] 日志
 
+
+### 问题
+
+#### 解决 mac 电脑挂载问题
+```
+brew install socat
+socat TCP-LISTEN:2376,reuseaddr,fork,bind=127.0.0.1 UNIX-CLIENT:/var/run/docker.sock
+```
+接着设置 host 为 `tcp://localhost:2376`

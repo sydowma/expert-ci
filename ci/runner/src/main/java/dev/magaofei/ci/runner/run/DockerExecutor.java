@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -62,8 +63,9 @@ public class DockerExecutor implements Executor {
 
     @Override
     public void init(ActionConfig actionConfig) {
+
         DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder().dockerHost(standard.getDockerHost()).sslConfig(standard.getSSLConfig()).build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder().dockerHost(URI.create("tcp://127.0.0.1:2376")).sslConfig(standard.getSSLConfig()).build();
         this.dockerClient = DockerClientImpl.getInstance(standard, httpClient);
         this.dockerConfig = ActionToDocker.convert(actionConfig);
     }
