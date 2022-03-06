@@ -1,0 +1,1 @@
+package dev.magaofei.ci.server;
